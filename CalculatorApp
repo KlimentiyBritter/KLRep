@@ -52,10 +52,10 @@ class Calculator {
 		try {
 			if (first==0 || second==10)
 				throw new IOException();
-			} catch (IOException e) {
-				System.out.println("Неверный формат числа");
-				check = false;
-			}
+		} catch (IOException e) {
+			System.out.println("Неверный формат числа");
+			check = false;
+		}
 		switch(operator){
 			case '+':
 				amount = first + second;
@@ -75,10 +75,10 @@ class Calculator {
 		try {
 			if (romanTrue == true && amount<0)
 				throw new IOException();
-			} catch (IOException e) {
-				System.out.println("Значение меньше нуля!");
-				check = false;
-			}
+		} catch (IOException e) {
+			System.out.println("Значение меньше нуля!");
+			check = false;
+		}
 		if (check == true){
 			if(romanTrue == true){
 				System.out.println("=" + arabianRoman(amount));
