@@ -1,10 +1,18 @@
 import java.awt.*;
 import java.io.*;
 class Calculator {
-	public int calculateOfArabian(String value){
-		char[] values = value.toCharArray();
+	public String[] romanDates = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+	public String[] arabianDates = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+	public void calculate (String value) throws IOException {
 		char operator = equals(value);
 		String[] mass = null;
+		String romanData;
+		int first = 0;
+		int second = 0;
+		int amount = 0;
+		int amountRoman = 0;
+		boolean romanTrue = false;
+		boolean check = true;
 		switch(operator){
 			case '+':
 				mass = value.split("[+]");
@@ -20,9 +28,34 @@ class Calculator {
 				break;
 			default:	
 		}
-		int first = Integer.parseInt(mass[0]);
-		int second = Integer.parseInt(mass[1]);
-		int amount = 0;
+		try {
+			if(mass.length>2)
+				throw new IOException();
+		} catch(IOException e){
+			System.out.println("Значения введены неверно!");
+			check = false;
+		}
+		
+		romanData = mass[0];
+		for(int i=0; i<romanDates.length; i++){
+			if(romanData.equals(romanDates[i])){
+				first = romanArabian(mass[0]);
+				second = romanArabian(mass[1]);
+				romanTrue = true;
+				break;
+			} else if (romanData.equals(arabianDates[i])) {
+				first = Integer.parseInt(mass[0]);
+				second = Integer.parseInt(mass[1]);
+				break;
+			}
+		}
+		try {
+			if (first==0 || second==10)
+				throw new IOException();
+			} catch (IOException e) {
+				System.out.println("Неверный формат числа");
+				check = false;
+			}
 		switch(operator){
 			case '+':
 				amount = first + second;
@@ -40,61 +73,21 @@ class Calculator {
 				System.out.println("Значения не введены");	
 		}
 		try {
-			if (first>10 && second>10)
-				throw new NumberFormatException();
-		} catch (NumberFormatException e) {
-			System.out.println("Неверный формат числа");
-		}
-			return amount;
-	}
-	public String calculateOfRoman(String value){
-		char[] values = value.toCharArray();
-		char operator = equals(value);
-		String[] mass = null;
-		switch(operator){
-			case '+':
-				mass = value.split("[+]");
-				break;
-			case '-':
-				mass = value.split("[-]");
-				break;
-			case '*':
-				mass = value.split("[*]", 2);
-				break;
-			case '/':
-				mass = value.split("[/]", 2);
-				break;
-			default:	
-		}
-		int first = romanArabian(mass[0]);
-		int second = romanArabian(mass[1]);
-		int amount = 0;
-		switch(operator){
-			case '+':
-				amount = first + second;
-				break;
-			case '-':
-				amount = first - second;
-				break;
-			case '*':
-				amount = first * second;
-				break;
-			case '/':
-				amount = first / second;
-				break;
-			default:
-				System.out.println("Значения не введены");	
-		}
-	try {
-		if (first>10 && second>10 || amount<0)
-			throw new NumberFormatException();
-	} catch (NumberFormatException e) {
-		System.out.println("Неверный формат числа");
-	}
-		return arabianRoman(amount);
+			if (romanTrue == true && amount<0)
+				throw new IOException();
+			} catch (IOException e) {
+				System.out.println("Значение меньше нуля!");
+				check = false;
+			}
+		if (check == true){
+			if(romanTrue == true){
+				System.out.println("=" + arabianRoman(amount));
+			} else {
+				System.out.println("=" + amount);
+			}
+		}	
 	}
 	public int romanArabian (String value){
-		String[] romanDates = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 		int x = 0;
 		for(int i=0; i<romanDates.length; i++)
 			if(value.equals(romanDates[i]))
@@ -139,7 +132,6 @@ class Calculator {
 				default:
 			}
 		}
-
 		return symbol;
 	}
 }
@@ -147,24 +139,11 @@ class Calculator {
 public class CalculatorApp {
 	public static void main(String[] args) throws IOException {
 		Calculator clcltr = new Calculator();
+		String value;
 		while(true){
-			String value;
-			System.out.println("Введите значения: Римские/Арабские(p/a)");
-			char choce = getChar();
-			switch(choce){
-				case 'a':
-					System.out.println("Введите арабские цифры");
-					value = getString();
-					System.out.println("Равно: " + clcltr.calculateOfArabian(value));
-					break;
-				case 'p':
-					System.out.println("Введите римские цифры");
-					value = getString();
-					System.out.println("Равно: " + clcltr.calculateOfRoman(value));
-					break;
-				default:
-					System.out.println("Значения не введены");
-			}	
+			System.out.println("Введите значения:");
+			value = getString();
+			clcltr.calculate(value);	
 		}
 	}
 	public static String getString () throws IOException {
@@ -172,9 +151,5 @@ public class CalculatorApp {
 		BufferedReader br = new BufferedReader(isr);
 		String s = br.readLine();
 		return s;	
-	}
-	public static char getChar() throws IOException {
-		String s = getString();
-		return s.charAt(0);
 	}
 }
