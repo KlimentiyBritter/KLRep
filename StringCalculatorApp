@@ -1,0 +1,94 @@
+import java.awt.*;
+import java.io.*;
+class StringCalculate{
+	MathOperations math = new MathOperations();
+	void calculate(String value) throws IOException {
+		value = value.replaceAll("\"",  " ");
+		value = value.replaceAll("\\s", "");
+		char operator = equals(value);
+		String[] mass = null;
+		String result = null;
+		switch(operator){
+			case '+':
+				mass = value.split("[+]");
+				result = math.addition(mass[0], mass[1]);
+				break;
+			case '-':
+				mass = value.split("[-]");
+				result = math.substraction(mass[0], mass[1]);
+				break;
+			case '*':
+				mass = value.split("[*]");
+				result = math.multiplication(mass[0], mass[1]);
+				break;
+			case '/':
+				mass = value.split("[/]", 2);
+				result = math.division(mass[0], mass[1]);
+				break;
+			default:	
+		}
+		System.out.println(result);
+	}
+	char equals(String string){
+		char[] values = string.toCharArray();
+		char symbol = 0;
+		for (char c : values){
+			switch(c){
+				case '+':
+					symbol = '+';
+					break;
+				case '-':
+					symbol = '-';
+					break;
+				case '*':
+					symbol = '*';
+					break;
+				case '/':
+					symbol = '/';
+					break;
+				default:
+			}
+		}
+		return symbol;
+	}
+}
+
+class MathOperations{
+	String addition(String string1, String string2 ){
+		return string1+string2;	
+	}
+	String substraction(String string1, String string2){		
+		return string1.replaceAll(string2, "");	
+	}
+	String multiplication(String string1, String string2){
+		int byVal1 = Integer.parseInt(string2)-1;
+		String byVal2 = string1;
+		for(int x=0; x<byVal1; x++)
+			string1 += byVal2;
+		return string1;
+	}
+	String division(String string1, String string2){
+		int byVal = Integer.parseInt(string2);
+		byVal = string1.length()/byVal;
+		string1 = string1.substring(0, byVal);
+		return string1;
+	}
+}
+
+public class StringCalculatorApp {
+	public static void main(String[] args) throws IOException {
+		String value;
+		StringCalculate calc = new StringCalculate();
+		while(true){
+			System.out.println("Введите значения:");
+			value = getString();	
+			calc.calculate(value);
+		}
+	}
+	public static String getString () throws IOException {
+		InputStreamReader isr = new InputStreamReader(System.in);
+		BufferedReader br = new BufferedReader(isr);
+		String s = br.readLine();
+		return s;	
+	}
+}
