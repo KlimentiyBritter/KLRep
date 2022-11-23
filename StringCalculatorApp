@@ -2,32 +2,73 @@ import java.awt.*;
 import java.io.*;
 class StringCalculate{
 	MathOperations math = new MathOperations();
-	void calculate(String value) throws IOException {
-		value = value.replaceAll("\"",  " ");
-		value = value.replaceAll("\\s", "");
+	Check check = new Check();
+	boolean checking = true;
+	void calculate(String value) throws Exception {
 		char operator = equals(value);
 		String[] mass = null;
 		String result = null;
 		switch(operator){
 			case '+':
 				mass = value.split("[+]");
-				result = math.addition(mass[0], mass[1]);
+				checking = check.checkingTheValue(mass[0], mass[1], operator);
+				System.out.println(checking + "+");
+				if(checking == true){
+					mass[0] = correct(mass[0]);
+					mass[1] = correct(mass[1]);
+					result = math.addition(mass[0], mass[1]);
+				} else {
+					try {
+						throw new IOException();
+					} catch(IOException e){
+						System.out.println("Значения введены неверно!");
+					}
+				}
 				break;
 			case '-':
 				mass = value.split("[-]");
-				result = math.substraction(mass[0], mass[1]);
+				checking = check.checkingTheValue(mass[0], mass[1], operator);
+				System.out.println(checking + "-");
+				if(checking == true){
+					mass[0] = correct(mass[0]);
+					mass[1] = correct(mass[1]);
+					result = math.substraction(mass[0], mass[1]);
+				}	
 				break;
 			case '*':
 				mass = value.split("[*]");
-				result = math.multiplication(mass[0], mass[1]);
+				checking = check.checkingTheValue(mass[0], mass[1], operator);
+				System.out.println(checking + "*");
+				if(checking == true){
+					mass[0] = correct(mass[0]);
+					mass[1] = correct(mass[1]);
+					result = math.multiplication(mass[0], mass[1]);
+				}	
 				break;
 			case '/':
 				mass = value.split("[/]", 2);
-				result = math.division(mass[0], mass[1]);
+				checking = check.checkingTheValue(mass[0], mass[1], operator);
+				System.out.println(checking + "/");
+				if(checking == true){
+					mass[0] = correct(mass[0]);
+					mass[1] = correct(mass[1]);
+					result = math.division(mass[0], mass[1]);
+				}	
 				break;
 			default:	
 		}
-		System.out.println(result);
+		if(result.length()>40){
+			result = result.substring(0, 40);
+			System.out.println("\"" + result + "..." + "\"");
+		} else {
+			System.out.println("\"" + result + "\"");
+		}
+	}
+	String correct(String string){
+		string = string.replaceAll("\"",  "");
+		string = string.replaceAll("\\s", "");
+		return string;
+		
 	}
 	char equals(String string){
 		char[] values = string.toCharArray();
@@ -52,13 +93,45 @@ class StringCalculate{
 		return symbol;
 	}
 }
+class Check {
+	boolean checkingTheValue(String value1, String value2, char operator) throws Exception {	
+		if(operator == '+' || operator == '-'){
+			if(value1.substring(0, 1).equals("\"") && value1.substring(value1.length()-2, value1.length()-1).equals("\"") && value2.substring(1, 2).equals("\"") && value2.substring(value2.length()-1, value2.length()).equals("\""))
+				if(value1.length()<14 && value2.length()<14)	//Проверка строки на количество символов
+					return true;
+				else
+					return false;
+			else
+				return false;
+		} else if(operator == '*' || operator == '/'){
+			int byVal = 0;
+			System.out.println(value1.substring(0, 1).equals("\""));
+			if(value1.substring(0, 1).equals("\"") && value1.substring(value1.length()-2, value1.length()-1).equals("\"")){
+				System.out.println("true1");
+				value2 = value2.replaceAll("\\s", "");
+				try {
+					byVal = Integer.parseInt(value2); 
+				} catch(Exception e) {
+					System.out.println("Введите правильное число");
+				}
+				if(byVal>=0 && byVal<11)
+					return true;
+				else 
+					return false;
+			} else {
+				return false;
+			}	
+		}
+		return false;
+	}
+}
 
 class MathOperations{
 	String addition(String string1, String string2 ){
 		return string1+string2;	
 	}
 	String substraction(String string1, String string2){		
-		return string1.replaceAll(string2, "");	
+		return string1.replaceAll(string2, " ");	
 	}
 	String multiplication(String string1, String string2){
 		int byVal1 = Integer.parseInt(string2)-1;
@@ -76,7 +149,7 @@ class MathOperations{
 }
 
 public class StringCalculatorApp {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		String value;
 		StringCalculate calc = new StringCalculate();
 		while(true){
