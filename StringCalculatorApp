@@ -12,7 +12,6 @@ class StringCalculate{
 			case '+':
 				mass = value.split("[+]");
 				checking = check.checkingTheValue(mass[0], mass[1], operator);
-				System.out.println(checking + "+");
 				if(checking == true){
 					mass[0] = correct(mass[0]);
 					mass[1] = correct(mass[1]);
@@ -28,7 +27,6 @@ class StringCalculate{
 			case '-':
 				mass = value.split("[-]");
 				checking = check.checkingTheValue(mass[0], mass[1], operator);
-				System.out.println(checking + "-");
 				if(checking == true){
 					mass[0] = correct(mass[0]);
 					mass[1] = correct(mass[1]);
@@ -38,7 +36,6 @@ class StringCalculate{
 			case '*':
 				mass = value.split("[*]");
 				checking = check.checkingTheValue(mass[0], mass[1], operator);
-				System.out.println(checking + "*");
 				if(checking == true){
 					mass[0] = correct(mass[0]);
 					mass[1] = correct(mass[1]);
@@ -48,7 +45,6 @@ class StringCalculate{
 			case '/':
 				mass = value.split("[/]", 2);
 				checking = check.checkingTheValue(mass[0], mass[1], operator);
-				System.out.println(checking + "/");
 				if(checking == true){
 					mass[0] = correct(mass[0]);
 					mass[1] = correct(mass[1]);
@@ -97,7 +93,7 @@ class Check {
 	boolean checkingTheValue(String value1, String value2, char operator) throws Exception {	
 		if(operator == '+' || operator == '-'){
 			if(value1.substring(0, 1).equals("\"") && value1.substring(value1.length()-2, value1.length()-1).equals("\"") && value2.substring(1, 2).equals("\"") && value2.substring(value2.length()-1, value2.length()).equals("\""))
-				if(value1.length()<14 && value2.length()<14)	//Проверка строки на количество символов
+				if(value1.length()<14 && value2.length()<14)
 					return true;
 				else
 					return false;
@@ -106,8 +102,7 @@ class Check {
 		} else if(operator == '*' || operator == '/'){
 			int byVal = 0;
 			System.out.println(value1.substring(0, 1).equals("\""));
-			if(value1.substring(0, 1).equals("\"") && value1.substring(value1.length()-2, value1.length()-1).equals("\"")){
-				System.out.println("true1");
+			if(value1.substring(0, 1).equals("\"") && value1.substring(value1.length()-2, value1.length()-1).equals("\"")) {
 				value2 = value2.replaceAll("\\s", "");
 				try {
 					byVal = Integer.parseInt(value2); 
@@ -126,7 +121,7 @@ class Check {
 	}
 }
 
-class MathOperations{
+class MathOperations {
 	String addition(String string1, String string2 ){
 		return string1+string2;	
 	}
